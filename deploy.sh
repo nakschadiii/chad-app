@@ -1,5 +1,5 @@
 pm2 stop app
-git pull
+git pull https://github.com/nakschadiii/chad-app.git master
 mysql -u root
 use database cosmo
 source users.sql
