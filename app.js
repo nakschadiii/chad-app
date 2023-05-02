@@ -12,36 +12,30 @@ app.use(cors());
 app.use(express.static(path.resolve(__dirname, 'client/build')));
 let users = [];
 
-//const getHostnameAndAddress = require('./host.js');
-//getHostnameAndAddress((hostname, addr) => {
-    //console.log(`hôte : ${addr}`);
+const socketIO = require('socket.io')(http, {
+    cors: {
+        origin: `http://127.0.0.1:3000`
+    }
+});
 
-    const socketIO = require('socket.io')(http, {
-        cors: {
-            //origin: `http://${addr}:3000`
-            origin: `http://127.0.0.1:3000`
-        }
-    });
+socketIO.on('connection', (socket) => {
+    socket.removeAllListeners(); console.log(`⚡: ${socket.id} user just connected!`);
+    socket.on('message', (data) => { socketIO.emit('messageResponse', data); });
+    socket.on('login', (data) => {  console.log(data); spawn('php', ['app.php', 'login', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('loginVerified', data.toString()); } }); });
+    socket.on('register', (data) => { spawn('php', ['app.php', 'register', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('registerVerified', data.toString()); } }); });
+    socket.on('disconnect', () => { console.log('🔥: A user disconnected'); users = users.filter((user) => user.socketID !== socket.id); socketIO.emit('newUserResponse', users); socket.disconnect(); });
+});
 
-    socketIO.on('connection', (socket) => {
-        socket.removeAllListeners(); console.log(`⚡: ${socket.id} user just connected!`);
-        socket.on('message', (data) => { socketIO.emit('messageResponse', data); });
-        socket.on('login', (data) => {  console.log(data); spawn('php', ['app.php', 'login', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('loginVerified', data.toString()); } }); });
-        socket.on('register', (data) => { spawn('php', ['app.php', 'register', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('registerVerified', data.toString()); } }); });
-        socket.on('disconnect', () => { console.log('🔥: A user disconnected'); users = users.filter((user) => user.socketID !== socket.id); socketIO.emit('newUserResponse', users); socket.disconnect(); });
-    });
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client/build', 'index.html'));
+});
 
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'client/build', 'index.html'));
+app.get('/api', (req, res) => {
+    res.json({
+        message: 'Hello world',
     });
+});
 
-    app.get('/api', (req, res) => {
-        res.json({
-            message: 'Hello world',
-        });
-    });
-
-    http.listen(PORT, () => {
-        console.log(`Server listening on ${PORT}`);
-    });
-//});
+http.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+});
