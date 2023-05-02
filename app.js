@@ -22,7 +22,7 @@ let users = [];
 socketIO.on('connection', (socket) => {
     socket.removeAllListeners(); console.log(`⚡: ${socket.id} user just connected!`);
     socket.on('message', (data) => { socketIO.emit('messageResponse', data); });
-    socket.on('login', (data) => { spawn('php', ['app.php', 'login', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('loginVerified', data.toString()); } }); });
+    socket.on('login', (data) => {  console.log(data); spawn('php', ['app.php', 'login', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('loginVerified', data.toString()); } }); });
     socket.on('register', (data) => { spawn('php', ['app.php', 'register', JSON.stringify(data)]).stdout.on('data', (data) => { if (data.toString() != null) { socket.emit('registerVerified', data.toString()); } }); });
     socket.on('disconnect', () => { console.log('🔥: A user disconnected'); users = users.filter((user) => user.socketID !== socket.id); socketIO.emit('newUserResponse', users); socket.disconnect(); });
 });
