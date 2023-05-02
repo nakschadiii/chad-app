@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 4000;
+const PORT = 80;
 
 const http = require('http').Server(app);
 const cors = require('cors');
@@ -13,7 +13,7 @@ app.use(express.static(path.resolve(__dirname, 'client/build')));
 
 const socketIO = require('socket.io')(http, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "http://85.90.245.34:3000"
     }
 });
 
