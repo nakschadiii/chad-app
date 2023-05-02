@@ -7,7 +7,7 @@ import NotLoggedPage from './components/notLoggedPage';
 import HomePage from './components/HomePage';
 import Logout from './components/Logout';
 
-const socket = socketIO.connect('http://85.90.245.34:80/');
+const socket = socketIO.connect('http://85.90.245.34:4000/');
 //const socket = io('http://localhost/api/');
 
 function App() {
