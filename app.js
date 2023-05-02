@@ -12,13 +12,14 @@ app.use(cors());
 app.use(express.static(path.resolve(__dirname, 'client/build')));
 let users = [];
 
-const getHostnameAndAddress = require('./host.js');
-getHostnameAndAddress((hostname, addr) => {
-    console.log(`hôte : ${addr}`);
+//const getHostnameAndAddress = require('./host.js');
+//getHostnameAndAddress((hostname, addr) => {
+    //console.log(`hôte : ${addr}`);
 
     const socketIO = require('socket.io')(http, {
         cors: {
-            origin: `http://${addr}:3000`
+            //origin: `http://${addr}:3000`
+            origin: `http://127.0.0.1:3000`
         }
     });
 
@@ -43,4 +44,4 @@ getHostnameAndAddress((hostname, addr) => {
     http.listen(PORT, () => {
         console.log(`Server listening on ${PORT}`);
     });
-});
+//});
