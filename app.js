@@ -8,6 +8,11 @@ const path = require('path');
 
 const { spawn } = require('child_process');
 
+app.get('*', (req, res) => {
+    const clientHostname = req.headers.host;
+    res.send(`Vous avez joint le site à partir de : ${clientHostname}`);
+});
+
 app.use(cors());
 app.use(express.static(path.resolve(__dirname, 'client/build')));
 
