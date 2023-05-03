@@ -3,5 +3,6 @@ cd /var/www/85.90.245.34/
 mysqldump -u root --databases cosmo > return.sql
 git pull --no-edit https://github.com/nakschadiii/chad-app.git master
 mysql -u root cosmo < users.sql
+clear
 pm2 restart app
 ls -lr
